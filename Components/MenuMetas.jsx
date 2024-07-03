@@ -62,11 +62,11 @@ export default function MenuMetas() {
             </View>
             <View style={styles.ContainerOptions}>
                 <Ionicons name="document-text-outline" marginRight={14} size={24} color="#000" />
-                <TouchableOpacity style={styles.TextOptionR}>
+                <TouchableOpacity onPress={() => navigation.navigate('FiltroMeta')} style={styles.TextOptionR}>
                     <Text>Registro de metas </Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate('Inicio')} style={styles.backButton}>
+            <TouchableOpacity onPress={() => navigation.navigate('MenuActividadF')} style={styles.backButton}>
                 <Ionicons name="arrow-back-outline" size={30} color="#000" />
             </TouchableOpacity>
         </View>

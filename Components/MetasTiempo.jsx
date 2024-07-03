@@ -5,17 +5,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { db,auth } from '../config/FirebaseConfig';
 
-export default function MetasDistancia() {
+export default function MetasTiempo() {
 
     const [selectedUnidad, setselectedUnidad] = useState('');
+    const [Time, setTime] = useState('');
     const [Distance, setDistance] = useState('');
-    const [selectedPTime, setselectedPTime] = useState('');
     const [Category, setCategory] = useState('');
 
     const navigation = useNavigation();
 
-    async function RegisterMetaD() {
-        if (selectedUnidad === '' || Distance === '' || selectedPTime === '' || Category === '') {
+    async function RegisterMetaT() {
+        if (selectedUnidad === '' || Distance === '' || Time === '' || Category === '') {
           Alert.alert('Error', 'Todos los campos son obligatorios');
           return;
         }
@@ -24,16 +24,16 @@ export default function MetasDistancia() {
           const user = auth.currentUser;
           if (user) {
             await db.collection('Usuarios').doc(user.uid).collection('Metas').add({
-              TipoMeta: 'Distancia',
+              TipoMeta: 'Tiempo',
               Unidad: selectedUnidad,
+              Tiempo: Time,
               Distancia: Distance,
-              Periodo: selectedPTime,
               Categoria: Category
             });
             Alert.alert('Éxito', 'Meta registrada correctamente');
             setselectedUnidad('');
             setDistance('');
-            setselectedPTime('');
+            setTime('');
             setCategory('');
           } else {
             Alert.alert('Error', 'No se pudo encontrar al usuario');
@@ -62,7 +62,7 @@ export default function MetasDistancia() {
             </View>
             <View style={styles.dropdownContainer}>
             <Image style={styles.cardIcon1} source={require('../assets/MetasHechas.png')} />
-               <Text>Meta de distancia</Text>
+               <Text>Meta de Tiempo</Text>
             </View>
             <View style={styles.formContainer}>
             <Text  style={styles.TextInput}>Unidad de distancia</Text>
@@ -78,6 +78,17 @@ export default function MetasDistancia() {
             <Picker.Item label="Kilometros" value="Kilometros" />
           </Picker>
         </View>
+        <Text  style={styles.TextInput}>Tiempo</Text>
+        <View style={styles.inputContainer}>
+          <Ionicons name="timer-outline" size={24} color="#000" />
+          <TextInput
+            style={styles.input}
+            placeholder="Ingresar Tiempo"
+            placeholderTextColor="#666"
+            value={Time}
+            onChangeText={setTime}
+          />
+        </View>
             <Text  style={styles.TextInput}>Distancia</Text>
         <View style={styles.inputContainer}>
         <Ionicons name="location-outline" size={24} color="#000" />
@@ -88,20 +99,6 @@ export default function MetasDistancia() {
             value={Distance}
             onChangeText={setDistance}
           />
-        </View>
-        <Text  style={styles.TextInput}>Perido de tiempo</Text>
-        <View style={styles.dropdownContainer1}>
-          <Ionicons name="timer-outline" size={24} color="#000" />
-          <Picker
-            selectedValue={selectedPTime}
-            style={styles.picker}
-            onValueChange={(itemValue) => setselectedPTime(itemValue)}
-          >
-            <Picker.Item label="Seleccionar" value="" />
-            <Picker.Item label="Diario" value="Diario" />
-            <Picker.Item label="Semanal" value="Semanal" />
-            <Picker.Item label="Mensual" value="Mensual" />
-          </Picker>
         </View>
         <Text  style={styles.TextInput}>Categoria Fisica</Text>
         <View style={styles.inputContainer}>
@@ -119,7 +116,7 @@ export default function MetasDistancia() {
             <TouchableOpacity onPress={() => navigation.navigate('MenuMeta')} style={styles.backButton}>
                 <Ionicons name="arrow-back-outline" size={30} color="#000" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={RegisterMetaD} style={styles.ButtonRegistrar}>
+            <TouchableOpacity onPress={RegisterMetaT} style={styles.ButtonRegistrar}>
                 <Text style={styles.registerButtonText}>Guardar</Text>
             </TouchableOpacity>
             </View>

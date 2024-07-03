@@ -1,47 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, TextInput, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { db,auth } from '../config/FirebaseConfig';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { db, auth } from '../config/FirebaseConfig';
 
-export default function MetasDistancia() {
+export default function EditarMetaT() {
 
     const [selectedUnidad, setselectedUnidad] = useState('');
+    const [Time, setTime] = useState('');
     const [Distance, setDistance] = useState('');
-    const [selectedPTime, setselectedPTime] = useState('');
     const [Category, setCategory] = useState('');
 
     const navigation = useNavigation();
+    const route = useRoute();
+    const { meta } = route.params; 
 
-    async function RegisterMetaD() {
-        if (selectedUnidad === '' || Distance === '' || selectedPTime === '' || Category === '') {
-          Alert.alert('Error', 'Todos los campos son obligatorios');
-          return;
+    useEffect(() => {
+        if (meta) {
+            setselectedUnidad(meta.Unidad);
+            setTime(meta.Tiempo);
+            setDistance(meta.Distancia);
+            setCategory(meta.Categoria);
         }
-    
+    }, [meta]);
+
+    async function EditMetaT() {
+        if (selectedUnidad === '' || Time === '' || Distance === '' || Category === '') {
+            Alert.alert('Error', 'Todos los campos son obligatorios');
+            return;
+        }
+
         try {
-          const user = auth.currentUser;
-          if (user) {
-            await db.collection('Usuarios').doc(user.uid).collection('Metas').add({
-              TipoMeta: 'Distancia',
-              Unidad: selectedUnidad,
-              Distancia: Distance,
-              Periodo: selectedPTime,
-              Categoria: Category
-            });
-            Alert.alert('Éxito', 'Meta registrada correctamente');
-            setselectedUnidad('');
-            setDistance('');
-            setselectedPTime('');
-            setCategory('');
-          } else {
-            Alert.alert('Error', 'No se pudo encontrar al usuario');
-          }
+            const user = auth.currentUser;
+            if (user) {
+                await db.collection('Usuarios').doc(user.uid).collection('Metas').doc(meta.id).update({
+                    Unidad: selectedUnidad,
+                    Tiempo: Time,
+                    Distancia: Distance,
+                    Categoria: Category
+                });
+                Alert.alert('Éxito', 'Meta actualizada correctamente');
+                navigation.navigate('MenuMeta');
+            } else {
+                Alert.alert('Error', 'No se pudo encontrar al usuario');
+            }
         } catch (error) {
-          Alert.alert('Error', error.message);
+            Alert.alert('Error', error.message);
         }
-      };
+    };
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -50,7 +57,7 @@ export default function MetasDistancia() {
                     <Image source={require('../assets/ConfigIcon.png')} style={styles.icon} />
                 </TouchableOpacity>
             </View>
-            
+
             <View style={styles.ContainerButton}>
                 <View style={styles.ContainerIcon}>
                     <Image style={styles.cardIcon} source={require('../assets/Runingico.png')} />
@@ -61,67 +68,64 @@ export default function MetasDistancia() {
                 </View>
             </View>
             <View style={styles.dropdownContainer}>
-            <Image style={styles.cardIcon1} source={require('../assets/MetasHechas.png')} />
-               <Text>Meta de distancia</Text>
+                <Image style={styles.cardIcon1} source={require('../assets/MetasHechas.png')} />
+                <Text>Meta de Tiempo</Text>
             </View>
             <View style={styles.formContainer}>
-            <Text  style={styles.TextInput}>Unidad de distancia</Text>
-        <View style={styles.dropdownContainer1}>
-        <Image source={require('../assets/ruleIcon.png')} style={styles.icon1} />
-          <Picker
-            selectedValue={selectedUnidad}
-            style={styles.picker}
-            onValueChange={(itemValue) => setselectedUnidad(itemValue)}
-          >
-            <Picker.Item label="Seleccionar" value="" />
-            <Picker.Item label="Metros" value="Metros" />
-            <Picker.Item label="Kilometros" value="Kilometros" />
-          </Picker>
-        </View>
-            <Text  style={styles.TextInput}>Distancia</Text>
-        <View style={styles.inputContainer}>
-        <Ionicons name="location-outline" size={24} color="#000" />
-          <TextInput
-            style={styles.input}
-            placeholder="Ingresar Distancia"
-            placeholderTextColor="#666"
-            value={Distance}
-            onChangeText={setDistance}
-          />
-        </View>
-        <Text  style={styles.TextInput}>Perido de tiempo</Text>
-        <View style={styles.dropdownContainer1}>
-          <Ionicons name="timer-outline" size={24} color="#000" />
-          <Picker
-            selectedValue={selectedPTime}
-            style={styles.picker}
-            onValueChange={(itemValue) => setselectedPTime(itemValue)}
-          >
-            <Picker.Item label="Seleccionar" value="" />
-            <Picker.Item label="Diario" value="Diario" />
-            <Picker.Item label="Semanal" value="Semanal" />
-            <Picker.Item label="Mensual" value="Mensual" />
-          </Picker>
-        </View>
-        <Text  style={styles.TextInput}>Categoria Fisica</Text>
-        <View style={styles.inputContainer}>
-        <Ionicons name="bicycle-sharp" size={24} color="#000" />
-          <TextInput
-            style={styles.input}
-            placeholder="Ingresar categoria"
-            placeholderTextColor="#666"
-            value={Category}
-            onChangeText={setCategory}
-          />
-        </View>
-        </View>
-        <View style={styles.ContainerBtn}>
-            <TouchableOpacity onPress={() => navigation.navigate('MenuMeta')} style={styles.backButton}>
-                <Ionicons name="arrow-back-outline" size={30} color="#000" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={RegisterMetaD} style={styles.ButtonRegistrar}>
-                <Text style={styles.registerButtonText}>Guardar</Text>
-            </TouchableOpacity>
+                <Text style={styles.TextInput}>Unidad de distancia</Text>
+                <View style={styles.dropdownContainer1}>
+                    <Image source={require('../assets/ruleIcon.png')} style={styles.icon1} />
+                    <Picker
+                        selectedValue={selectedUnidad}
+                        style={styles.picker}
+                        onValueChange={(itemValue) => setselectedUnidad(itemValue)}
+                    >
+                        <Picker.Item label="Seleccionar" value="" />
+                        <Picker.Item label="Metros" value="Metros" />
+                        <Picker.Item label="Kilometros" value="Kilometros" />
+                    </Picker>
+                </View>
+                <Text style={styles.TextInput}>Tiempo</Text>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="timer-outline" size={24} color="#000" />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Ingresar Tiempo"
+                        placeholderTextColor="#666"
+                        value={Time}
+                        onChangeText={setTime}
+                    />
+                </View>
+                <Text style={styles.TextInput}>Distancia</Text>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="location-outline" size={24} color="#000" />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Ingresar Distancia"
+                        placeholderTextColor="#666"
+                        value={Distance}
+                        onChangeText={setDistance}
+                    />
+                </View>
+                <Text style={styles.TextInput}>Categoria Fisica</Text>
+                <View style={styles.inputContainer}>
+                    <Ionicons name="bicycle-sharp" size={24} color="#000" />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Ingresar categoria"
+                        placeholderTextColor="#666"
+                        value={Category}
+                        onChangeText={setCategory}
+                    />
+                </View>
+            </View>
+            <View style={styles.ContainerBtn}>
+                <TouchableOpacity onPress={() => navigation.navigate('TablaTiemp')} style={styles.backButton}>
+                    <Ionicons name="arrow-back-outline" size={30} color="#000" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={EditMetaT} style={styles.ButtonRegistrar}>
+                    <Text style={styles.registerButtonText}>Guardar</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -204,9 +208,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#105963'
     },
-    ContainerBtn:{
+    ContainerBtn: {
         marginTop: 90,
-        width:'100%',
+        width: '100%',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between'
@@ -221,7 +225,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
 
-    ButtonRegistrar:{
+    ButtonRegistrar: {
         backgroundColor: '#fff',
         padding: 15,
         borderTopLeftRadius: 25,
@@ -233,7 +237,7 @@ const styles = StyleSheet.create({
     registerButtonText: {
         fontSize: 16,
         fontWeight: 'bold',
-      },
+    },
 
     ContainerButton: {
         marginTop: 50,
@@ -293,9 +297,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         marginBottom: 40,
         width: '85%'
-      },
+    },
 
-      dropdownContainer1: {
+    dropdownContainer1: {
         height: 40,
         flexDirection: 'row',
         alignItems: 'center',
@@ -304,12 +308,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         marginBottom: 20,
         width: '85%'
-      },
+    },
     picker: {
         flex: 1,
-      },
-      ContainerOptions:{
-        
+    },
+    ContainerOptions: {
+
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#32909C',
@@ -318,17 +322,17 @@ const styles = StyleSheet.create({
         marginBottom: 40,
         width: '85%',
         height: 55,
-      },
-      TextOptionR:{
+    },
+    TextOptionR: {
         marginLeft: 70
-      },
+    },
 
-      IconInput:{
+    IconInput: {
         width: 25,
         height: 25
-    
-      },
-      inputContainer: {
+
+    },
+    inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#fff',
@@ -336,16 +340,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         marginBottom: 20,
         height: 40,
-      },
+    },
 
-      TextInput:{
+    TextInput: {
         paddingLeft: 20,
         marginBottom: 4,
-      },
+    },
 
-      input: {
+    input: {
         height: 50,
         fontSize: 16,
         paddingLeft: 15
-      },
+    },
 });

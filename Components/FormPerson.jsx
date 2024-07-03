@@ -6,6 +6,7 @@ import { Calendar } from 'react-native-calendars';
 import { db, auth } from '../config/FirebaseConfig';
 import { useNavigation } from '@react-navigation/native';
 
+
  function PantallaDatosPer(){
 
   const [selectSex, setSelectSex] = useState('');
@@ -100,9 +101,11 @@ import { useNavigation } from '@react-navigation/native';
           <TextInput value={Altura} onChangeText={setAltura} style={estilos.input} placeholder="Ingresar" placeholderTextColor="#666" />
           <Text style={estilos.Labelinput}>Peso</Text>
           <TextInput value={Peso} onChangeText={setPeso} style={estilos.input} placeholder="Ingresar" placeholderTextColor="#666" />
+          <View style={estilos.buttonContainer}>
           <TouchableOpacity onPress={handleSave} style={estilos.button}>
             <Text style={estilos.buttonText}>Guardar</Text>
           </TouchableOpacity>
+          </View>
         </View>
       </LinearGradient>
     </View>
@@ -172,14 +175,20 @@ const estilos = StyleSheet.create({
     marginBottom: 15,
   },
 
+  buttonContainer:{
+    alignItems: 'center'
+  },
+
   button: {
-    backgroundColor: '#007BFF',
+    width:'30%',
+    backgroundColor: '#fff',
     borderRadius: 10,
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#fff',
+    color: '#000',
     fontSize: 16,
   },
 });

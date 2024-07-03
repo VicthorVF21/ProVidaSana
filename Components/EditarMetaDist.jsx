@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, TextInput, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { db,auth } from '../config/FirebaseConfig';
 
-export default function MetasDistancia() {
+export default function EditarMetaD() {
 
     const [selectedUnidad, setselectedUnidad] = useState('');
     const [Distance, setDistance] = useState('');
@@ -13,35 +13,43 @@ export default function MetasDistancia() {
     const [Category, setCategory] = useState('');
 
     const navigation = useNavigation();
+    const route = useRoute();
+    const { meta } = route.params; 
 
-    async function RegisterMetaD() {
+    useEffect(() => {
+        if (meta) {
+            setselectedUnidad(meta.Unidad);
+            setDistance(meta.Distancia);
+            setselectedPTime(meta.Periodo);
+            setCategory(meta.Categoria);
+        }
+    }, [meta]);
+
+    async function EditMetaD() {
         if (selectedUnidad === '' || Distance === '' || selectedPTime === '' || Category === '') {
-          Alert.alert('Error', 'Todos los campos son obligatorios');
-          return;
+            Alert.alert('Error', 'Todos los campos son obligatorios');
+            return;
         }
-    
+
         try {
-          const user = auth.currentUser;
-          if (user) {
-            await db.collection('Usuarios').doc(user.uid).collection('Metas').add({
-              TipoMeta: 'Distancia',
-              Unidad: selectedUnidad,
-              Distancia: Distance,
-              Periodo: selectedPTime,
-              Categoria: Category
-            });
-            Alert.alert('Éxito', 'Meta registrada correctamente');
-            setselectedUnidad('');
-            setDistance('');
-            setselectedPTime('');
-            setCategory('');
-          } else {
-            Alert.alert('Error', 'No se pudo encontrar al usuario');
-          }
+            const user = auth.currentUser;
+            if (user) {
+                await db.collection('Usuarios').doc(user.uid).collection('Metas').doc(meta.id).update({
+                    Unidad: selectedUnidad,
+                    Distancia: Distance,
+                    Periodo: selectedPTime,
+                    Categoria: Category
+                });
+                Alert.alert('Éxito', 'Meta actualizada correctamente');
+                navigation.navigate('MenuMeta');
+            } else {
+                Alert.alert('Error', 'No se pudo encontrar al usuario');
+            }
         } catch (error) {
-          Alert.alert('Error', error.message);
+            Alert.alert('Error', error.message);
         }
-      };
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -116,10 +124,10 @@ export default function MetasDistancia() {
         </View>
         </View>
         <View style={styles.ContainerBtn}>
-            <TouchableOpacity onPress={() => navigation.navigate('MenuMeta')} style={styles.backButton}>
+            <TouchableOpacity onPress={() => navigation.navigate('TablaDist')} style={styles.backButton}>
                 <Ionicons name="arrow-back-outline" size={30} color="#000" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={RegisterMetaD} style={styles.ButtonRegistrar}>
+            <TouchableOpacity onPress={EditMetaD} style={styles.ButtonRegistrar}>
                 <Text style={styles.registerButtonText}>Guardar</Text>
             </TouchableOpacity>
             </View>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect} from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import PantallaLogin from './Components/Login';
@@ -12,6 +12,16 @@ import RegistrarUser from './Components/RegistrarUser';
 import RegistrarEstAnimo from './Components/EstadoAni';
 import MenuMetas from './Components/MenuMetas';
 import MetasDistancia from './Components/MetaDistancia';
+import MetasTiempo from './Components/MetasTiempo';
+import MetasPasos from './Components/MetasPasos';
+import FiltroMetas from './Components/FiltroRMetas';
+import TablaDistancia from './Components/TablaDistancia';
+import EditarMetaD from './Components/EditarMetaDist';
+import TablaTiempo from './Components/TablaTiempo';
+import EditarMetaT from './Components/EditarMetaTie';
+import TablaPasos from './Components/TablaPasos';
+import EditarMetaP from './Components/EditarMetaPas';
+import MenuHistorial from './Components/MenuHistorial';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -55,6 +65,16 @@ export default function App() {
       <Stack.Screen name="EstadoAnimo" component={RegistrarEstAnimo} options={{ headerShown: false }} />
       <Stack.Screen name="MenuMeta" component={MenuMetas} options={{ headerShown: false }} />
       <Stack.Screen name="MetaDistancia" component={MetasDistancia} options={{ headerShown: false }} />
+      <Stack.Screen name="MetaTiempo" component={MetasTiempo} options={{ headerShown: false }} />
+      <Stack.Screen name="MetaPasos" component={MetasPasos} options={{ headerShown: false }} />
+      <Stack.Screen name="FiltroMeta" component={FiltroMetas} options={{ headerShown: false }} />
+      <Stack.Screen name="TablaDist" component={TablaDistancia} options={{ headerShown: false }} />
+      <Stack.Screen name="EditarMetaD" component={EditarMetaD} options={{ headerShown: false }} />
+      <Stack.Screen name="TablaTiemp" component={TablaTiempo} options={{ headerShown: false }} />
+      <Stack.Screen name="EditarMetaT" component={EditarMetaT} options={{ headerShown: false }} />
+      <Stack.Screen name="TablaPasos" component={TablaPasos} options={{ headerShown: false }} />
+      <Stack.Screen name="EditarMetaP" component={EditarMetaP} options={{ headerShown: false }} />
+      <Stack.Screen name="MenuHistorial" component={MenuHistorial} options={{ headerShown: false }} />
     </Stack.Navigator>
   </NavigationContainer>
  

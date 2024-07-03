@@ -5,17 +5,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { db,auth } from '../config/FirebaseConfig';
 
-export default function MetasDistancia() {
+export default function MetasPasos() {
 
-    const [selectedUnidad, setselectedUnidad] = useState('');
-    const [Distance, setDistance] = useState('');
     const [selectedPTime, setselectedPTime] = useState('');
-    const [Category, setCategory] = useState('');
+    const [CPasos, setCpasos] = useState('');
 
     const navigation = useNavigation();
 
-    async function RegisterMetaD() {
-        if (selectedUnidad === '' || Distance === '' || selectedPTime === '' || Category === '') {
+    async function RegisterMetaT() {
+        if (selectedPTime === '' || CPasos === '') {
           Alert.alert('Error', 'Todos los campos son obligatorios');
           return;
         }
@@ -24,17 +22,13 @@ export default function MetasDistancia() {
           const user = auth.currentUser;
           if (user) {
             await db.collection('Usuarios').doc(user.uid).collection('Metas').add({
-              TipoMeta: 'Distancia',
-              Unidad: selectedUnidad,
-              Distancia: Distance,
+              TipoMeta: 'Pasos',
+              CantidadPasos: CPasos,
               Periodo: selectedPTime,
-              Categoria: Category
             });
             Alert.alert('Éxito', 'Meta registrada correctamente');
-            setselectedUnidad('');
-            setDistance('');
             setselectedPTime('');
-            setCategory('');
+            setCpasos('');
           } else {
             Alert.alert('Error', 'No se pudo encontrar al usuario');
           }
@@ -62,31 +56,18 @@ export default function MetasDistancia() {
             </View>
             <View style={styles.dropdownContainer}>
             <Image style={styles.cardIcon1} source={require('../assets/MetasHechas.png')} />
-               <Text>Meta de distancia</Text>
+               <Text>Meta de Pasos</Text>
             </View>
             <View style={styles.formContainer}>
-            <Text  style={styles.TextInput}>Unidad de distancia</Text>
-        <View style={styles.dropdownContainer1}>
-        <Image source={require('../assets/ruleIcon.png')} style={styles.icon1} />
-          <Picker
-            selectedValue={selectedUnidad}
-            style={styles.picker}
-            onValueChange={(itemValue) => setselectedUnidad(itemValue)}
-          >
-            <Picker.Item label="Seleccionar" value="" />
-            <Picker.Item label="Metros" value="Metros" />
-            <Picker.Item label="Kilometros" value="Kilometros" />
-          </Picker>
-        </View>
-            <Text  style={styles.TextInput}>Distancia</Text>
+        <Text  style={styles.TextInput}>Cantidad de pasos</Text>
         <View style={styles.inputContainer}>
-        <Ionicons name="location-outline" size={24} color="#000" />
+          <Ionicons name="footsteps-sharp" size={24} color="#000" />
           <TextInput
             style={styles.input}
-            placeholder="Ingresar Distancia"
+            placeholder="Ingresar cantidad de pasos"
             placeholderTextColor="#666"
-            value={Distance}
-            onChangeText={setDistance}
+            value={CPasos}
+            onChangeText={setCpasos}
           />
         </View>
         <Text  style={styles.TextInput}>Perido de tiempo</Text>
@@ -103,23 +84,12 @@ export default function MetasDistancia() {
             <Picker.Item label="Mensual" value="Mensual" />
           </Picker>
         </View>
-        <Text  style={styles.TextInput}>Categoria Fisica</Text>
-        <View style={styles.inputContainer}>
-        <Ionicons name="bicycle-sharp" size={24} color="#000" />
-          <TextInput
-            style={styles.input}
-            placeholder="Ingresar categoria"
-            placeholderTextColor="#666"
-            value={Category}
-            onChangeText={setCategory}
-          />
-        </View>
         </View>
         <View style={styles.ContainerBtn}>
             <TouchableOpacity onPress={() => navigation.navigate('MenuMeta')} style={styles.backButton}>
                 <Ionicons name="arrow-back-outline" size={30} color="#000" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={RegisterMetaD} style={styles.ButtonRegistrar}>
+            <TouchableOpacity onPress={RegisterMetaT} style={styles.ButtonRegistrar}>
                 <Text style={styles.registerButtonText}>Guardar</Text>
             </TouchableOpacity>
             </View>
@@ -205,7 +175,7 @@ const styles = StyleSheet.create({
         color: '#105963'
     },
     ContainerBtn:{
-        marginTop: 90,
+        marginTop: '62%',
         width:'100%',
         display: 'flex',
         flexDirection: 'row',

@@ -45,7 +45,7 @@ export default function MenuActF() {
         <Text style={styles.optionText}>Metas</Text>
         </View>
         <View>
-        <TouchableOpacity style={styles.optionButton}>
+        <TouchableOpacity onPress={() => navigation.navigate('MenuHistorial')} style={styles.optionButton}>
         <Image style={styles.ImgButton} source={require('../assets/Historial.png')} />
         </TouchableOpacity>
         <Text style={styles.optionText}>Historial</Text>
