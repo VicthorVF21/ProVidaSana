@@ -2,37 +2,47 @@ import React, {useState} from 'react';
 import { View, Text, TextInput,Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import { auth }  from '../config/FirebaseConfig';
+import { auth, db }  from '../config/FirebaseConfig';
 
-export default function PantallaLogin() {
+export default function RegistrarUser() {
 
   const [Nuser, setNuser] = useState('');
   const [password, setPassword] = useState('');
+  const [Email, setEmail] = useState('');
 
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    if (Nuser === '' || password === '') {
-      Alert.alert('Error', 'Por favor ingrese su nombre de usuario y contraseña');
+  async function handleRegister() {
+    if (Nuser === '' || password === '' || Email === '') {
+      Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
 
-    auth.signInWithEmailAndPassword(Nuser, password)
-      .then((userCredential) => {
-        navigation.navigate('Inicio');
-      })
-      .catch((error) => {
-        Alert.alert('Error', error.message);
+    try {
+      const userCredential = await auth.createUserWithEmailAndPassword(Email, password);
+      const uid = userCredential.user.uid;
+
+      await db.collection('Usuarios').doc(uid).set({
+        username: Nuser,
+        email: Email,
       });
+
+      Alert.alert('Éxito', 'Usuario registrado correctamente');
+      navigation.navigate('DatosPer'); 
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
   };
 
   return (
     <LinearGradient
-    colors={['#E0F7FA','#3A909B']} style={estilos.contenedor} >
-      <Image style={estilos.imagenCirculos} source={require('../assets/FormaCirculos.png')}/>
+    colors={['#CAF8FE','#FE9A62']} style={estilos.contenedor} >
+      <Image style={estilos.imagenCirculos} source={require('../assets/CirculoNSuperior.png')}/>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')} style={estilos.loginButton}>
+          <Text style={estilos.loginText}>Iniciar Sesion</Text>
+        </TouchableOpacity>
       <View style={estilos.VTitulo}>
-      <Image style={estilos.titulo} source={require('../assets/LVidaSanaNG.png')}/>
-      <Text style={estilos.subtitulo}>Login</Text>
+      <Text style={estilos.subtitulo}>Registrar Cuenta</Text>
       </View>
       <TextInput
         style={estilos.input1}
@@ -42,25 +52,27 @@ export default function PantallaLogin() {
         onChangeText={setNuser}
       />
       <TextInput
-        style={estilos.input2}
+        style={estilos.input1}
         placeholder="Contraseña"
         placeholderTextColor="#666"
         secureTextEntry
         value={password}
         onChangeText={setPassword}
       />
-      <TouchableOpacity>
-        <Text style={estilos.olvidoContraseña}>Olvidé mi contraseña</Text>
-      </TouchableOpacity>
+            <TextInput
+        style={estilos.input2}
+        placeholder="Correo Electronico"
+        placeholderTextColor="#666"
+        value={Email}
+        onChangeText={setEmail}
+      />
+      
       <View style={estilos.VButtons}>
-      <TouchableOpacity style={estilos.boton} onPress={handleLogin}>
-        <Text style={estilos.textoBoton}>Iniciar sesión</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('RegistrarUser')} style={estilos.boton}>
-        <Text style={estilos.textoBoton}>Registrarse</Text>
+      <TouchableOpacity style={estilos.boton}>
+        <Text onPress={handleRegister} style={estilos.textoBoton}>Registrarse</Text>
       </TouchableOpacity>
       </View >
-      <Image style={estilos.imagenCirculosI} source={require('../assets/FormaCirculosI.png')}/>
+      <Image style={estilos.imagenCirculosI} source={require('../assets/CirculoNInferior.png')}/>
     </LinearGradient>
   );
 };
@@ -74,6 +86,23 @@ const estilos = StyleSheet.create({
   VTitulo:{
    
     alignItems: 'center',
+  },
+
+  loginButton: {
+    position: 'absolute',
+    top: 40,
+    right: 0,
+    backgroundColor: '#fff',
+    paddingLeft: 30,
+    paddingRight: 20,
+    borderTopLeftRadius: 25,
+    borderBottomLeftRadius: 25,
+   
+  },
+  loginText: {
+    color: '#000',
+    fontSize: 20,
+    fontFamily: 'Amiri-Bold',
   },
 
   VButtons:{
@@ -111,7 +140,7 @@ const estilos = StyleSheet.create({
     borderTopRightRadius: 25,
     borderBottomRightRadius: 25,
     paddingHorizontal: 15,
-    marginBottom: 10,
+    marginBottom: 50,
     backgroundColor: '#fff',
   },
 

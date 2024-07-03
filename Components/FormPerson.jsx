@@ -1,18 +1,63 @@
-import React from 'react';
-import { View, Text, TextInput,Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TextInput,Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Picker } from '@react-native-picker/picker';
+import { Calendar } from 'react-native-calendars';
+import { db, auth } from '../config/FirebaseConfig';
+import { useNavigation } from '@react-navigation/native';
 
  function PantallaDatosPer(){
 
-  const [selectedSex, setSelectedSex] = React.useState('');
+  const [selectSex, setSelectSex] = useState('');
+  const [Date, setDate] = useState('');
+  const [Name, setName] = useState('');
+  const [Altura, setAltura] = useState('');
+  const [Peso, setPeso] = useState('');
+  const [show, setShow] = useState(false);
+
+  const navigation = useNavigation();
+
+  async function handleSave() {
+    if (!Name || !Date || !selectSex || !Altura || !Peso) {
+      Alert.alert('Error', 'Todos los campos son obligatorios');
+      return;
+    }
+
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        await db.collection('Usuarios').doc(user.uid).update({
+          Nombre: Name,
+          FechaNacimiento: Date,
+          sexo: selectSex,
+          Altura: Altura,
+          Peso: Peso
+        });
+        Alert.alert('Éxito', 'Datos guardados correctamente');
+        navigation.navigate('Login');
+      } else {
+        Alert.alert('Error', 'No se pudo encontrar al usuario');
+      }
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
+
+  function onDayPress(day){
+    setDate(day.dateString);
+    setShow(false);
+  };
+
+  function showCalendar(){
+    setShow(true);
+  };
+
 
   return (
     <View style={estilos.container}>
       <LinearGradient colors={['#E0F7FA', '#3A909B']} style={estilos.gradient}>
         <View style={estilos.header}>
         <Image style={estilos.title} source={require('../assets/LVidaSanaBL.png')} resizeMode="contain"/>
-          {/* <Image source={require('../assets/user-icon.png')} style={estilos.icon} /> */}
         </View>
         <View style={estilos.Continfo}>
         <Text style={estilos.infoText}>
@@ -21,14 +66,30 @@ import { Picker } from '@react-native-picker/picker';
         </View>
         <View style={estilos.inputContainer}>
           <Text style={estilos.Labelinput}>Nombre</Text>
-          <TextInput style={estilos.input} placeholder="Completar" placeholderTextColor="#666" />
+          <TextInput value={Name} onChangeText={setName} style={estilos.input} placeholder="Completar" placeholderTextColor="#666" />
           <Text style={estilos.Labelinput}>Fecha de nacimiento</Text>
-          <TextInput style={estilos.input} placeholder="dd/mm/aa" placeholderTextColor="#666" />
+          <TouchableOpacity onPress={showCalendar}>
+            <TextInput
+              style={estilos.input}
+              placeholder="dd/mm/aa"
+              placeholderTextColor="#666"
+              editable={false}
+              value={Date}
+            />
+          </TouchableOpacity>
+          {show && (
+            <Calendar
+              onDayPress={onDayPress}
+              markedDates={{
+                [Date]: { selected: true, marked: true, selectedColor: 'blue' }
+              }}
+            />
+          )}
           <Text style={estilos.Labelinput}>Sexo</Text>
           <View style={estilos.inputSelect}> 
           <Picker
-            selectedValue={selectedSex}
-            onValueChange={(itemValue) => setSelectedSex(itemValue)}
+            selectedValue={selectSex}
+            onValueChange={(itemValue) => setSelectSex(itemValue)}
           >
             <Picker.Item label="Seleccionar" value="" />
             <Picker.Item label="Masculino" value="masculino" />
@@ -36,10 +97,10 @@ import { Picker } from '@react-native-picker/picker';
           </Picker>
           </View>
           <Text style={estilos.Labelinput}>Altura</Text>
-          <TextInput style={estilos.input} placeholder="Ingresar" placeholderTextColor="#666" />
+          <TextInput value={Altura} onChangeText={setAltura} style={estilos.input} placeholder="Ingresar" placeholderTextColor="#666" />
           <Text style={estilos.Labelinput}>Peso</Text>
-          <TextInput style={estilos.input} placeholder="Ingresar" placeholderTextColor="#666" />
-          <TouchableOpacity style={estilos.button}>
+          <TextInput value={Peso} onChangeText={setPeso} style={estilos.input} placeholder="Ingresar" placeholderTextColor="#666" />
+          <TouchableOpacity onPress={handleSave} style={estilos.button}>
             <Text style={estilos.buttonText}>Guardar</Text>
           </TouchableOpacity>
         </View>

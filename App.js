@@ -3,8 +3,15 @@ import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import PantallaLogin from './Components/Login';
 import PantallaDatosPer from './Components/FormPerson';
+import PantallaInicio from './Components/Inicio';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import RegistrarActividad from './Components/ActividadF';
+import MenuActF from './Components/MenuActividadF';
+import RegistrarUser from './Components/RegistrarUser';
+import RegistrarEstAnimo from './Components/EstadoAni';
+import MenuMetas from './Components/MenuMetas';
+import MetasDistancia from './Components/MetaDistancia';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,7 +47,14 @@ export default function App() {
     <NavigationContainer>
     <Stack.Navigator initialRouteName="Login">
       <Stack.Screen name="Login" component={PantallaLogin} options={{ headerShown: false }} />
-      <Stack.Screen name="Inicio" component={PantallaDatosPer} options={{ headerShown: false }} />
+      <Stack.Screen name="DatosPer" component={PantallaDatosPer} options={{ headerShown: false }} />
+      <Stack.Screen name="Inicio" component={PantallaInicio} options={{ headerShown: false }} />
+      <Stack.Screen name="MenuActividadF" component={MenuActF} options={{ headerShown: false }} />
+      <Stack.Screen name="ActividadF" component={RegistrarActividad} options={{ headerShown: false }} />
+      <Stack.Screen name="RegistrarUser" component={RegistrarUser} options={{ headerShown: false }} />
+      <Stack.Screen name="EstadoAnimo" component={RegistrarEstAnimo} options={{ headerShown: false }} />
+      <Stack.Screen name="MenuMeta" component={MenuMetas} options={{ headerShown: false }} />
+      <Stack.Screen name="MetaDistancia" component={MetasDistancia} options={{ headerShown: false }} />
     </Stack.Navigator>
   </NavigationContainer>
  
