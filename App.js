@@ -22,6 +22,16 @@ import EditarMetaT from './Components/EditarMetaTie';
 import TablaPasos from './Components/TablaPasos';
 import EditarMetaP from './Components/EditarMetaPas';
 import MenuHistorial from './Components/MenuHistorial';
+import HistActR from './Components/HistActRealizadas';
+import HistEstA from './Components/HistEstAnimo';
+import HistMetas from './Components/HistMetas';
+import MenuCitas from './Components/MenuCitasM';
+import RegistrarCita from './Components/AgregarCitas';
+import HistCitas from './Components/HistCitas';
+import MenuMedica from './Components/MenuMedica';
+import RegistrarMed from './Components/AgregarMed';
+import HistMedica from './Components/HistMedica';
+import InfoSalud from './Components/InfoSalud';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -75,6 +85,16 @@ export default function App() {
       <Stack.Screen name="TablaPasos" component={TablaPasos} options={{ headerShown: false }} />
       <Stack.Screen name="EditarMetaP" component={EditarMetaP} options={{ headerShown: false }} />
       <Stack.Screen name="MenuHistorial" component={MenuHistorial} options={{ headerShown: false }} />
+      <Stack.Screen name="HistActR" component={HistActR} options={{ headerShown: false }} />
+      <Stack.Screen name="HistEstA" component={HistEstA} options={{ headerShown: false }} />
+      <Stack.Screen name="HistMetas" component={HistMetas} options={{ headerShown: false }} />
+      <Stack.Screen name="MenuCitas" component={MenuCitas} options={{ headerShown: false }} />
+      <Stack.Screen name="ReCitas" component={RegistrarCita} options={{ headerShown: false }} />
+      <Stack.Screen name="HistCitas" component={HistCitas} options={{ headerShown: false }} />
+      <Stack.Screen name="MenuMedica" component={MenuMedica} options={{ headerShown: false }} />
+      <Stack.Screen name="ReMedica" component={RegistrarMed} options={{ headerShown: false }} />
+      <Stack.Screen name="HistMedica" component={HistMedica} options={{ headerShown: false }} />
+      <Stack.Screen name="InfoSalud" component={InfoSalud} options={{ headerShown: false }} />
     </Stack.Navigator>
   </NavigationContainer>
  

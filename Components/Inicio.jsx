@@ -34,8 +34,8 @@ export default function PantallaInicio() {
       <View style={styles.ContainerIcon}>
       <Image style={styles.cardIcon} source={require('../assets/CalendarMed.png')} />
       </View>
-      <TouchableOpacity style={styles.card}>
-        <Text style={styles.cardText}>Actividad física</Text>
+      <TouchableOpacity style={styles.card} onPress={() => router.navigate('MenuCitas')}>
+        <Text style={styles.cardText}>Citas Medicas</Text>
         <Ionicons name="chevron-forward-outline" size={24} color="#000" />
       </TouchableOpacity>
       </View>
@@ -43,8 +43,8 @@ export default function PantallaInicio() {
       <View style={styles.ContainerIcon}>
       <Image style={styles.cardIcon} source={require('../assets/GestionMed.png')} />
       </View>
-      <TouchableOpacity style={styles.card}>
-        <Text style={styles.cardText}>Actividad física</Text>
+      <TouchableOpacity style={styles.card} onPress={() => router.navigate('MenuMedica')}>
+        <Text style={styles.cardText}>Gestion de Medicamentos</Text>
         <Ionicons name="chevron-forward-outline" size={24} color="#000" />
       </TouchableOpacity>
       </View>

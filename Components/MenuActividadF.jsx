@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React  from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -37,7 +37,15 @@ export default function MenuActF() {
         <Text style={styles.optionText}>Estado de ánimo</Text>
         </View>
       </View>
-      <View style={styles.optionsContainer}>
+      <View>
+      <View style={styles.optionsContainer2}>
+        <TouchableOpacity onPress={() => navigation.navigate('InfoSalud')} style={styles.optionButton}>
+        <Image style={styles.ImgButton2} source={require('../assets/InfoSalud.png')} />
+        </TouchableOpacity>
+        <Text style={styles.optionText}>Informacion Saludable</Text>
+        </View>
+        </View>
+      <View style={styles.optionsContainer1}>
         <View>
         <TouchableOpacity onPress={() => navigation.navigate('MenuMeta')} style={styles.optionButton}>
         <Image style={styles.ImgButton1} source={require('../assets/Metas.png')} />
@@ -104,6 +112,20 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 30,
   },
+
+  optionsContainer1: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    width: '100%',
+    
+  },
+
+  optionsContainer2: {
+    alignItems: 'center',
+    width: '100%'
+  },
+
   optionButton: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -121,6 +143,11 @@ const styles = StyleSheet.create({
 
   ImgButton1:{
     width: 70,
+    height: 70
+  },
+
+  ImgButton2:{
+    width: 72,
     height: 70
   },
 

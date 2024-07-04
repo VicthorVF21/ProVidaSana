@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Alert} from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Alert, Modal} from 'react-native';
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { Calendar } from 'react-native-calendars';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { auth, db } from '../config/FirebaseConfig';
 
-export default function RegistrarActividad() {
-  const [selectedIntensity, setSelectedIntensity] = useState('');
-  const [date, setDate] = useState('');
-  const [activity, setActivity] = useState('');
-  const [showCalendar, setShowCalendar] = useState(false);
-
+export default function RegistrarCita() {
+    const [especialidad, setespecialidad] = useState('');
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState(new Date());
+    const [location, setlocation] = useState('');
+    const [showCalendar, setShowCalendar] = useState(false);
+    const [showHour, setShowHour] = useState(false);
+  
   const navigation = useNavigation();
 
   function onDayPress(day){
@@ -19,8 +21,14 @@ export default function RegistrarActividad() {
     setShowCalendar(false);
   };
 
+  function onTimeChange(event, selectedTime) {
+    const currentTime = selectedTime || time;
+    setShowHour(false);
+    setTime(currentTime);
+  }
+
   async function handleRegister() {
-    if (activity === '' || date === '' || selectedIntensity === '') {
+    if (especialidad === '' || date === '' || !time || location === '') {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
@@ -28,20 +36,21 @@ export default function RegistrarActividad() {
     try {
       const user = auth.currentUser;
       if (user) {
-        await db.collection('Usuarios').doc(user.uid).collection('ActividadR').add({
-          actividad: activity,
+        await db.collection('Usuarios').doc(user.uid).collection('CitasM').add({
+          especialidad,
           fecha: date,
-          intensidad: selectedIntensity,
+          hora: time.toTimeString().split(' ')[0],
+          ubicacion: location,
         });
-        Alert.alert('Éxito', 'Actividad registrada correctamente');
-        navigation.navigate('MenuActividadF');
+        Alert.alert('Éxito', 'Cita registrada correctamente');
+        navigation.navigate('MenuCitas');
       } else {
         Alert.alert('Error', 'No se pudo encontrar al usuario');
       }
     } catch (error) {
       Alert.alert('Error', error.message);
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -55,26 +64,15 @@ export default function RegistrarActividad() {
       <View style={styles.ContainerTitle}>
       <View style={styles.ContainerButton}>
       <View style={styles.ContainerIcon}>
-      <Image style={styles.cardIcon} source={require('../assets/Runingico.png')} />
+      <Image style={styles.cardIcon} source={require('../assets/CalendarMed.png')} />
       </View>
       <View style={styles.card}>
-        <Text  style={styles.cardText}>Actividad física</Text>
+        <Text  style={styles.cardText}>Citas Medicas</Text>
         <Ionicons name="chevron-down-outline" size={24} color="#000" />
       </View>
       </View>
       </View>
-      <Text  style={styles.TextInput}>Actividad Realizada</Text>
-        <View style={styles.inputContainer}>
-        <Image style={styles.IconInput} source={require('../assets/ArtMarcial.png')} />
-          <TextInput
-            style={styles.input}
-            placeholder="Escriba la actividad"
-            placeholderTextColor="#666"
-            value={activity}
-            onChangeText={setActivity}
-          />
-        </View>
-        <Text  style={styles.TextInput}>Fecha</Text>
+      <Text  style={styles.TextInput}>Fecha</Text>
         <View style={styles.inputFecha}>
           <Ionicons name="calendar-outline" size={24} color="#000" />
           <TouchableOpacity onPress={() => setShowCalendar(true)}>
@@ -95,22 +93,52 @@ export default function RegistrarActividad() {
             />
           )}
         </View>
-        <Text  style={styles.TextInput}>Nivel de intensidad</Text>
+        <Text style={styles.TextInput}>Hora de la cita</Text>
+        <View style={styles.inputFecha}>
+          <Ionicons name="time-outline" size={24} color="#000" />
+          <TouchableOpacity onPress={() => setShowHour(true)}>
+            <TextInput
+              style={styles.input}
+              placeholder="HH:MM"
+              placeholderTextColor="#666"
+              editable={false}
+              value={time.toTimeString().split(' ')[0]}
+            />
+          </TouchableOpacity>
+          {showHour && (
+            <DateTimePicker
+              value={time}
+              mode="time"
+              is24Hour={true}
+              display="default"
+              onChange={onTimeChange}
+            />
+          )}
+        </View>
+        <Text  style={styles.TextInput}>Especialidad</Text>
         <View style={styles.dropdownContainer}>
-          <Ionicons name="trending-up-outline" size={24} color="#000" />
-          <Picker
-            selectedValue={selectedIntensity}
-            style={styles.picker}
-            onValueChange={(itemValue) => setSelectedIntensity(itemValue)}
-          >
-            <Picker.Item label="Seleccionar" value="" />
-            <Picker.Item label="Baja" value="baja" />
-            <Picker.Item label="Media" value="media" />
-            <Picker.Item label="Alta" value="alta" />
-          </Picker>
+          <Ionicons name="medkit-outline" size={24} color="#000" />
+          <TextInput
+            style={styles.input}
+            placeholder="Escriba la especialidad"
+            placeholderTextColor="#666"
+            value={especialidad}
+            onChangeText={setespecialidad}
+          />
+        </View>
+        <Text  style={styles.TextInput}>Ubicación</Text>
+        <View style={styles.inputContainer}>
+        <Ionicons name="location-sharp" size={24} color="#000" />
+          <TextInput
+            style={styles.input}
+            placeholder="Escriba la ubicacion"
+            placeholderTextColor="#666"
+            value={location}
+            onChangeText={setlocation}
+          />
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('MenuActividadF')} style={styles.backButton}>
+          <TouchableOpacity onPress={() => navigation.navigate('MenuCitas')} style={styles.backButton}>
             <Ionicons name="arrow-back-outline" size={24} color="#000" />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleRegister} style={styles.registerButton}>
@@ -201,7 +229,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: '60%',
+    marginTop: '45%',
     
   },
   backButton: {

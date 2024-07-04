@@ -1,15 +1,12 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-
-export default function MenuHistorial() {
-
+export default function MenuMedica() {
 
     const navigation = useNavigation();
 
-    
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -18,49 +15,37 @@ export default function MenuHistorial() {
                     <Image source={require('../assets/ConfigIcon.png')} style={styles.icon} />
                 </TouchableOpacity>
             </View>
-            
             <View style={styles.ContainerButton}>
                 <View style={styles.ContainerIcon}>
-                    <Image style={styles.cardIcon} source={require('../assets/Runingico.png')} />
+                    <Image style={styles.cardIcon} source={require('../assets/GestionMed.png')} />
                 </View>
                 <View style={styles.card}>
-                    <Text style={styles.cardText}>Actividad física</Text>
+                    <Text style={styles.cardText}>Gestion de Medicamentos</Text>
                     <Ionicons name="chevron-down-outline" size={24} color="#000" />
                 </View>
             </View>
-            <View style={styles.dropdownContainer}>
-            <Image style={styles.cardIcon1} source={require('../assets/Historial.png')} />
-               <Text style={styles.TextCard}>Historial</Text>
+            <View style={styles.ContainerOptions}>
+            <Ionicons name="calendar-number-outline" size={24} color="#000" />
+            <TouchableOpacity onPress={() => navigation.navigate('ReMedica')} style={styles.TextOptionR}>
+                    <Text>Registrar Medicamento</Text>
+                </TouchableOpacity>
+                <Ionicons name="menu-sharp" marginLeft={65} size={24} color="#000" />
             </View>
-            
-            
-        <View style={styles.inputContainer}>
-        <Image source={require('../assets/ActRealizada.png')} style={styles.icon1} />
-          <TouchableOpacity onPress={() => navigation.navigate('HistActR')} style={styles.card1}>
-            <Text style={styles.TextCard} >Actividades realizadas</Text>
-            <Ionicons name="chevron-down-outline" size={24} color="#000" />
-        </TouchableOpacity>
-        </View>
-            
-        <View style={styles.inputContainer}>
-        <Image source={require('../assets/EstAnimo.png')} style={styles.icon2} />
-        <TouchableOpacity onPress={() => navigation.navigate('HistEstA')} style={styles.card1}>
-            <Text style={styles.TextCard}>Estados de animo</Text>
-            <Ionicons name="chevron-down-outline" size={24} color="#000" />
-        </TouchableOpacity>
-        </View>
-        <View style={styles.inputContainer}>
-        <Image source={require('../assets/Metas.png')} style={styles.icon1} />
-        <TouchableOpacity onPress={() => navigation.navigate('HistMetas')} style={styles.card1}>
-            <Text style={styles.TextCard}>Metas</Text>
-            <Ionicons name="chevron-down-outline" size={24} color="#000" />
-        </TouchableOpacity>
-        </View>
-        
-            <TouchableOpacity onPress={() => navigation.navigate('MenuActividadF')} style={styles.backButton}>
+            <View style={styles.ContainerOptions}>
+                <Ionicons name="notifications-sharp" marginRight={14} size={24} color="#000" />
+                <TouchableOpacity>
+                    <Text>Activar notificaciones de recordatorio </Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.ContainerOptions}>
+                <Ionicons name="document-text-outline" marginRight={14} size={24} color="#000" />
+                <TouchableOpacity onPress={() => navigation.navigate('HistMedica')} style={styles.TextOptionR1}>
+                    <Text>Registro de Medicamentos</Text>
+                </TouchableOpacity>
+            </View>
+            <TouchableOpacity onPress={() => navigation.navigate('Inicio')} style={styles.backButton}>
                 <Ionicons name="arrow-back-outline" size={30} color="#000" />
             </TouchableOpacity>
-            
         </View>
     );
 }
@@ -89,12 +74,6 @@ const styles = StyleSheet.create({
         height: 24,
         width: 24,
     },
-
-    icon1: {
-        height: 20,
-        width: 29,
-    },
-
     pickerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -142,16 +121,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#105963'
     },
-    ContainerBtn:{
-        marginTop: 90,
-        width:'100%',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-
     backButton: {
-        marginTop: '35%',
+        marginTop: '45%',
         backgroundColor: '#fff',
         padding: 15,
         borderRadius: 25,
@@ -159,27 +130,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
 
-    ButtonRegistrar:{
-        backgroundColor: '#fff',
-        padding: 15,
-        borderTopLeftRadius: 25,
-        borderBottomLeftRadius: 25,
-        width: '25%',
-        alignItems: 'center'
-    },
-
-    TextCard:{
-
-        fontSize: 15
-    },
-
-
     ContainerButton: {
         marginTop: 50,
         backgroundColor: '#ffffff',
         width: '90%',
         borderRadius: 35,
-        marginBottom: 30,
+        marginBottom: 90,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -201,8 +157,8 @@ const styles = StyleSheet.create({
 
     cardIcon1: {
         height: 40,
-        width: 35,
-        marginRight: 100
+        width: 30,
+        
     },
 
     cardText: {
@@ -223,33 +179,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
 
-    card1: {
-        alignItems: 'center',
-        flexDirection: 'row',
-        paddingLeft: 15,
-        width: '95%',
-        justifyContent: 'space-between'
-    },
-
     dropdownContainer: {
-        height: 70,
+        
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: '#32909C',
         borderRadius: 17,
         paddingHorizontal: 15,
-        marginBottom: 70,
-        width: '85%',
-      },
-
-      dropdownContainer1: {
-        height: 40,
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        borderRadius: 17,
-        paddingHorizontal: 15,
-        marginBottom: 20,
+        marginBottom: 40,
         width: '85%'
       },
     picker: {
@@ -267,43 +204,13 @@ const styles = StyleSheet.create({
         height: 55,
       },
       TextOptionR:{
-        marginLeft: 70
+        marginLeft: 60,
+        
       },
 
-      IconInput:{
-        width: 25,
-        height: 25
-    
-      },
-      inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        borderRadius: 25,
-        paddingHorizontal: 15,
-        marginBottom: 40,
-        height: 50,
-        width: '85%'
-      },
+      TextOptionR1:{
 
-      TextInput:{
-        paddingLeft: 20,
-        marginBottom: 4,
-      },
+        marginLeft: 40,
 
-      input: {
-        height: 50,
-        fontSize: 16,
-        paddingLeft: 15
-      },
-
-      icon1: {
-        height: 30,
-        width: 25,
-    },
-
-    icon2: {
-        height: 30,
-        width: 29,
-    },
+      }
 });
